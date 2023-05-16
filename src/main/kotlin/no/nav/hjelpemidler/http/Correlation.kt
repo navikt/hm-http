@@ -14,11 +14,8 @@ internal const val NAV_CONSUMER_ID_KEY = "Nav-Consumer-Id"
 internal const val NAV_CALL_ID_KEY = "Nav-CallId"
 internal const val NAV_CORRELATION_ID_KEY = "X-Correlation-ID"
 
-fun createCorrelationId(): String =
-    UUID.randomUUID().toString()
-
-fun currentCorrelationId(): String? =
-    MDC.get(CORRELATION_ID_KEY)
+fun currentCorrelationId(): String =
+    MDC.get(CORRELATION_ID_KEY) ?: UUID.randomUUID().toString()
 
 fun HttpMessageBuilder.navConsumerId(value: String = NaisEnvironmentVariable.NAIS_APP_NAME) =
     header(NAV_CONSUMER_ID_KEY, value)
@@ -38,7 +35,7 @@ fun HttpMessage.navCallId(): String? =
 fun HttpMessage.navCorrelationId(): String? =
     headers[NAV_CORRELATION_ID_KEY]
 
-fun HttpMessageBuilder.correlationId(value: String = currentCorrelationId() ?: createCorrelationId()): String {
+fun HttpMessageBuilder.correlationId(value: String = currentCorrelationId()): String {
     navCallId(value)
     navCorrelationId(value)
     navConsumerId()
@@ -51,7 +48,7 @@ inline fun <T> withCorrelationId(
     body: () -> T,
 ): T =
     withLoggingContext(
-        pair = arrayOf(Pair<String, String?>(CORRELATION_ID_KEY, createCorrelationId())).plus(pair),
+        pair = arrayOf(Pair<String, String?>(CORRELATION_ID_KEY, currentCorrelationId())).plus(pair),
         restorePrevious = restorePrevious,
         body = body,
     )

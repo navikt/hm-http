@@ -38,4 +38,15 @@ class CorrelationTest {
             request.navConsumerId() shouldBe "hm-http"
         }
     }
+
+    @Test
+    fun `Nestet correlationId`() {
+        withCorrelationId {
+            val id1 = currentCorrelationId()
+            val id2 = withCorrelationId {
+                currentCorrelationId()
+            }
+            id1 shouldBe id2
+        }
+    }
 }
