@@ -1,6 +1,8 @@
 # hm-http
 
-Fellesbibliotek for HTTP-trafikk i Team Hjelpemiddelbehov.
+Fellesbibliotek for HTTP-trafikk i DigiHoT.
+
+NB! Flyttet til [https://github.com/navikt/hotlibs](https://github.com/navikt/hotlibs).
 
 ## Publisering
 
